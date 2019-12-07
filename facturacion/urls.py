@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.conf.urls import include
 from django.conf.urls import url
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 
@@ -30,5 +32,5 @@ urlpatterns = [
     url(r'^Facturación/', include('Facturación.urls')),
    
 
-]
+]+ static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 
