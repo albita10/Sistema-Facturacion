@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}
+    Clientes
+{% endblock title %}
+{% block content %}
+{% load crispy_forms_tags %}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Nuevo Clientes
+  </button>
+  <br><br>
+  
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nombre Comercial</th>
+      <th>Cedula</th>
+      <th>Cuenta</th>
+      <th>Estado </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for i in Clientes %}
+    <tr>
+      <td>{{i.nombre_comercial}}</td>
+      <th>{{i.cedula}}</th>
+      <th>{{i.cuenta}}</th>
+      <td>{{i.estado}}</td>
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nuevo Clientes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+              <form  method='POST'>{% csrf_token %}
+                        {{ClientesForm | crispy}}
+                      <input type="submit" value="Guardar Clientes"/>
+                  </form>
+
+
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+
+      $("#id_cedula").focusout(function(){valida_cedula($("#id_cedula").val())});
+      
+      function valida_cedula(ced) { 
+	    var c = ced.replace(/-/g,'');  
+	    var cedula = c.substr(0, c.length - 1);  
+	    var verificador = c.substr(c.length - 1, 1);  
+	    var suma = 0;  
+		  var cedulaValida = 0;
+	    if(ced.length < 11) { return false; }  
+	    for (i=0; i < cedula.length; i++) {  
+	        mod = "";  
+	         if((i % 2) == 0){mod = 1} else {mod = 2}  
+	         res = cedula.substr(i,1) * mod;  
+	         if (res > 9) {  
+	              res = res.toString();  
+	              uno = res.substr(0,1);  
+	              dos = res.substr(1,1);  
+	              res = eval(uno) + eval(dos);  
+	         }  
+	         suma += eval(res);  
+	    }  
+	    el_numero = (10 - (suma % 10)) % 10;  
+	    if (el_numero == verificador && cedula.substr(0,3) != "000") {  
+	      cedulaValida = 1;
+	    }  
+	    else   {  
+       cedulaValida = 0;
+       alert("La cédula no es valida");
+       
+	    }  
+		
+	}
+</script>
+{% endblock %}
